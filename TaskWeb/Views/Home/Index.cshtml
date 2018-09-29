@@ -1,0 +1,90 @@
+﻿@model TaskWeb.Models.ViewModels.IndexViewModel
+
+@{
+    ViewBag.Title = "Главная страница";
+}
+
+@using Dal.DBObjects
+
+<script>
+    function ShowMessage() {
+        var result = confirm("Удаление отдела возможно,только при отсутствии в нём подотделов и сотрудников");
+        if (result) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+</script>
+
+
+@helper BuildTree(List<Department> departments)
+{
+    //var id = Url.RequestContext.RouteData.Values["id"];
+    <ul>
+        @for (int i = 0; i < departments.Count; i++)
+        {
+            <li>
+                <div class="comment" data-title="@Html.DisplayFor(modelItem => departments[i].Comment)">
+                    <a href=@Url.Action("Index", "Home", new { id = departments[i].Id }) style="color:@(departments[i].Id == Model.SelectedId?"black":"blue")">@Html.DisplayFor(modelItem => departments[i].Title)</a>
+                </div>
+                <div style="float:left">(@departments[i].EmployeesCount , </div><div style="float:left">@departments[i].EmployeesWithCount , </div><div class="info" style="color:@(Model.SelectedPensioners.Contains(departments[i].Id)?"red":"black");float:left">@departments[i].PensionersCount)</div>
+                <div>
+                    <a href=@Url.Action("Edit","Department",new {parentid = departments[i].Id}) id="Add"><img src="~/Content/plus.png" style="width:1.5em;height:1.4em"></a>
+                    <a href=@Url.Action("Edit","Department",new { id = @departments[i].Id }) id="Add"><img src="~/Content/edit.png" style="width:1.5em;height:1.4em"></a>
+                    <a href=@Url.Action("Delete","Department",new { id = departments[i].Id }) id="Add" onclick="javascript:return ShowMessage();"><img src="~/Content/delete.png" style="width:1.5em;height:1.4em"></a>
+                </div>
+                @BuildTree(departments[i].Children)
+            </li>
+        }
+    </ul>
+}
+
+<h1 style="margin-left:330px">Каталог подразделений</h1>
+<div style="float:left">
+    <a href=@Url.Action("Edit","Department") id="Add"><img src="~/Content/plus.png" style="width:1.5em;height:1.4em"> - Добавление отдела</a>
+    @BuildTree(Model.Departments)
+</div>
+<div>
+    <div class="scrollable" style="float:right">
+        <a href=@Url.Action("Edit","Employee",new { departmentid = Model.SelectedId}) id="Add" class="btn-link"><img src="~/Content/plus.png" style="width:1.5em;height:1.4em"></a>
+        <a href=@Url.Action("All","Home") id="Add" class="btn-link">Все</a>
+        <table class="table-striped table-hover">
+            <tr>
+                <th>ФИО</th>
+                <th>Дата рождения</th>
+                <th>Пол</th>
+                <th>Телефон</th>
+                <th>Примечание</th>
+            </tr>
+            @foreach (var item in Model.Employees)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FIO)
+                    </td>
+                    <td>
+                        @{
+                            string date = item.Date.ToShortDateString();
+                        }
+                        @Html.DisplayFor(modelItem => date)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.GenderStr)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Phone)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Comment)
+                    </td>
+                    <td>
+                        <a href=@Url.Action("Edit","Employee",new { id = item.Id,departmentid = Model.SelectedId }) id="Add"><img src="~/Content/edit.png" style="width:1.5em;height:1.4em"></a>
+                        <a href=@Url.Action("Delete","Employee",new { id = @item.Id}) id="Add"><img src="~/Content/delete.png" style="width:1.5em;height:1.4em"></a>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+
