@@ -38,16 +38,8 @@ namespace Dal.Repositories
              $"@{nameof(Department.Comment)}," +
              $"@{nameof(Department.ParentId)}");
 
-            if (model.Comment == null)
-                command.Parameters.AddWithValue($"@{nameof(Department.Comment)}", DBNull.Value);
-            else
-                command.Parameters.AddWithValue($"@{nameof(Department.Comment)}", model.Comment);
-
-            if (!model.ParentId.HasValue)
-                command.Parameters.AddWithValue($"@{nameof(Department.ParentId)}", DBNull.Value);
-            else
-                command.Parameters.AddWithValue($"{nameof(Department.ParentId)}", model.ParentId);
-
+            command.Parameters.AddWithValue($"@{nameof(Department.Comment)}", model.Comment == null ? DBNull.Value as object : model.Comment);
+            command.Parameters.AddWithValue($"@{nameof(Department.ParentId)}", model.ParentId.HasValue ? model.ParentId : DBNull.Value as object);
             command.Parameters.AddWithValue($"@{nameof(Department.Title)}", model.Title);
 
             Execute(command);
@@ -63,11 +55,7 @@ namespace Dal.Repositories
 
             command.Parameters.AddWithValue($"@{nameof(BasedObject.Id)}", model.Id);
             command.Parameters.AddWithValue($"@{nameof(Department.Title)}", model.Title);
-
-            if (model.Comment == null)
-                command.Parameters.AddWithValue($"@{nameof(Department.Comment)}", DBNull.Value);
-            else
-                command.Parameters.AddWithValue($"@{nameof(Department.Comment)}", model.Comment);
+            command.Parameters.AddWithValue($"@{nameof(Department.Comment)}", model.Comment == null ? DBNull.Value as object : model.Comment);
 
             Execute(command);
         }

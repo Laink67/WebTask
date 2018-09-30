@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Dal.Repositories;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Dal.DBObjects
 {
@@ -13,17 +15,14 @@ namespace Dal.DBObjects
 
         public int? ParentId { get; set; }
 
-        public List<Department> Children { get; set; } = new List<Department>(); 
+        public List<Department> Children { get; set; } = new List<Department>();
 
-        public IEnumerable<Employee> Employees { get;set }
+        public List<Employee> Employees { get; set; }
 
-        public int EmployeesCount { get; set; } //=>
+        public List<Employee> EmployeesWith { get; set; }
+        //    Children.Select(x => x.EmployeesWith).Cast<Employee>().Union(Employees).ToList();
 
-        public int EmployeesWithCount { get; set; } //=>
-
-        public int PensionersCount { get; set; } //=>
-
-        // public ienumerable<employee> employees 
+        public int PensionersCount  => Employees.Where(x => x.Retired).Count(); 
 
         public Department() { }
 
@@ -33,9 +32,8 @@ namespace Dal.DBObjects
             Title = title;
             Comment = comment;
             ParentId = parentid;
-
+            Employees = DataManager.Instance.Employees.GetAllForDepartment(id).ToList();
         }
-
 
     }
 }

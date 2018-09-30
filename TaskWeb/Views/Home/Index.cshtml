@@ -28,7 +28,7 @@
                 <div class="comment" data-title="@Html.DisplayFor(modelItem => departments[i].Comment)">
                     <a href=@Url.Action("Index", "Home", new { id = departments[i].Id }) style="color:@(departments[i].Id == Model.SelectedId?"black":"blue")">@Html.DisplayFor(modelItem => departments[i].Title)</a>
                 </div>
-                <div style="float:left">(@departments[i].EmployeesCount , </div><div style="float:left">@departments[i].EmployeesWithCount , </div><div class="info" style="color:@(Model.SelectedPensioners.Contains(departments[i].Id)?"red":"black");float:left">@departments[i].PensionersCount)</div>
+                <div style="float:left">(@departments[i].Employees.Count() ,</div><div class="info" style="color:@(Model.SelectedPensioners.Contains(departments[i].Id)?"red":"black");float:left">@departments[i].PensionersCount)</div>
                 <div>
                     <a href=@Url.Action("Edit","Department",new {parentid = departments[i].Id}) id="Add"><img src="~/Content/plus.png" style="width:1.5em;height:1.4em"></a>
                     <a href=@Url.Action("Edit","Department",new { id = @departments[i].Id }) id="Add"><img src="~/Content/edit.png" style="width:1.5em;height:1.4em"></a>
@@ -48,7 +48,8 @@
 <div>
     <div class="scrollable" style="float:right">
         <a href=@Url.Action("Edit","Employee",new { departmentid = Model.SelectedId}) id="Add" class="btn-link"><img src="~/Content/plus.png" style="width:1.5em;height:1.4em"></a>
-        <a href=@Url.Action("All","Home") id="Add" class="btn-link">Все</a>
+        <a href=@Url.Action("All","Home") id="Add" class="btn-link"  style="margin-left:10px">Все</a>
+        <a href=@Url.Action("AllWith","Home",new {id = Model.SelectedId}) id="Add" class="btn-link" style="margin:10px">С вложенными</a>
         <table class="table-striped table-hover">
             <tr>
                 <th>ФИО</th>

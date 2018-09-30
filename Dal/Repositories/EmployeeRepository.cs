@@ -22,7 +22,7 @@ namespace Dal.Repositories
 
         public List<Employee> GetAllForDepartment(int departmentid)
         {
-            using (var command = new SqlCommand($"select * from {nameof(Employee)} where DepartmentId = {departmentid}", connection))
+            using (var command = new SqlCommand($"select * from {nameof(Employee)} where {nameof(Employee.DepartmentId)} = {departmentid}", connection))
             {
                 return GetRecords(command);
             }
@@ -68,12 +68,7 @@ namespace Dal.Repositories
             command.Parameters.AddWithValue($"@{nameof(Employee.Gender)}", model.Gender);
             command.Parameters.AddWithValue($"@{nameof(Employee.Phone)}", model.Phone);
             command.Parameters.AddWithValue($"@{nameof(Employee.DepartmentId)}", model.DepartmentId);
-
-
-            if (model.Comment == null)
-                command.Parameters.AddWithValue($"@{nameof(Employee.Comment)}", DBNull.Value);
-            else
-                command.Parameters.AddWithValue($"@{nameof(Employee.Comment)}", model.Comment);
+            command.Parameters.AddWithValue($"@{nameof(Employee.Comment)}",model.Comment == null? DBNull.Value as object :model.Comment);
 
             Execute(command);
         }
