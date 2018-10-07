@@ -48,7 +48,7 @@
 <div>
     <div class="scrollable" style="float:right">
         <a href=@Url.Action("Edit","Employee",new { departmentid = Model.SelectedId}) id="Add" class="btn-link"><img src="~/Content/plus.png" style="width:1.5em;height:1.4em"></a>
-        <a href=@Url.Action("All","Home") id="Add" class="btn-link"  style="margin-left:10px">Все</a>
+        <a href=@Url.Action("All","Home",new {model = Model }) id="Add" class="btn-link" style="margin-left:10px">Все</a>
         <a href=@Url.Action("AllWith","Home",new {id = Model.SelectedId}) id="Add" class="btn-link" style="margin:10px">С вложенными</a>
         <table class="table-striped table-hover">
             <tr>
@@ -58,33 +58,7 @@
                 <th>Телефон</th>
                 <th>Примечание</th>
             </tr>
-            @foreach (var item in Model.Employees)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FIO)
-                    </td>
-                    <td>
-                        @{
-                            string date = item.Date.ToShortDateString();
-                        }
-                        @Html.DisplayFor(modelItem => date)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.GenderStr)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Phone)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Comment)
-                    </td>
-                    <td>
-                        <a href=@Url.Action("Edit","Employee",new { id = item.Id,departmentid = Model.SelectedId }) id="Add"><img src="~/Content/edit.png" style="width:1.5em;height:1.4em"></a>
-                        <a href=@Url.Action("Delete","Employee",new { id = @item.Id}) id="Add"><img src="~/Content/delete.png" style="width:1.5em;height:1.4em"></a>
-                    </td>
-                </tr>
-            }
+            <div id="resluts">@Html.Partial("TableEmployee", Model)
         </table>
     </div>
 </div>
