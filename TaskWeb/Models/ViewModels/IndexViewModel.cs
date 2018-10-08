@@ -15,6 +15,12 @@ namespace TaskWeb.Models.ViewModels
         public int? SelectedId { get; set; }
         public List<int> SelectedPensioners { get; set; } = new List<int>();
 
+        public IndexViewModel(List<Employee> employees, int? id)
+        {
+            SelectedId = id;
+            Employees = employees;
+        }
+
         public IndexViewModel(List<Department> departments, List<Employee> employees, int? id)
         {
             SelectedId = id;
@@ -22,15 +28,6 @@ namespace TaskWeb.Models.ViewModels
             Check(departments);
             Departments = departments;
         }
-
-        public IndexViewModel(List<Department> departments, int? id)
-        {
-            SelectedId = id;
-            Check(departments);
-            Departments = departments;
-            ForEmployeesWith(Departments,Employees,id);
-        }
-
 
         public void Check(List<Department> departments)
         {
@@ -44,17 +41,25 @@ namespace TaskWeb.Models.ViewModels
             }
         }
 
-        public void ForEmployeesWith(List<Department> departments,List<Employee> employees,int? id)
-        {
-            foreach (var department in departments)
-            {
-                if(department.ParentId == id || department.Id == id)
-                employees.AddRange(department.Employees);
+        //public IndexViewModel(List<Department> departments, int? id)
+        //{
+        //    SelectedId = id;
+        //    Check(departments);
+        //    Departments = departments;
+        //    ForEmployeesWith(Departments,Employees,id);
+        //}
 
-                if (department.Children.Count != 0)
-                    ForEmployeesWith(department.Children,employees,id);
-            }
-        }
+        //public void ForEmployeesWith(List<Department> departments,List<Employee> employees,int? id)
+        //{
+        //    foreach (var department in departments)
+        //    {
+        //        if(department.ParentId == id || department.Id == id)
+        //        employees.AddRange(department.Employees);
+
+        //        if (department.Children.Count != 0)
+        //            ForEmployeesWith(department.Children,employees,id);
+        //    }
+        //}
 
         //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         //public void CheckPensioners(IEnumerableIe<Department> departments, IEnumerableIe<Employee> employees)

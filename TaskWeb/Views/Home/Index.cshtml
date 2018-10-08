@@ -6,6 +6,8 @@
 
 @using Dal.DBObjects
 
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
 <script>
     function ShowMessage() {
         var result = confirm("Удаление отдела возможно,только при отсутствии в нём подотделов и сотрудников");
@@ -15,12 +17,29 @@
             return false;
         }
     }
+    $(document).ready(function () ) {
+
+        $("#Name").keydown(function () ) {
+
+            var searchtext = $(this).val();
+            debugger
+            $ajax({
+
+                type: "Post",
+                url: "/Home/Find?SearchText=" + searchtext,
+                contentType: "html",
+                success: function (response) {
+                    debugger
+                    $("#employeeRow").html(response);
+                }
+            })
+        }
+    }
 </script>
 
 
 @helper BuildTree(List<Department> departments)
 {
-    //var id = Url.RequestContext.RouteData.Values["id"];
     <ul>
         @for (int i = 0; i < departments.Count; i++)
         {
@@ -48,8 +67,8 @@
 <div>
     <div class="scrollable" style="float:right">
         <a href=@Url.Action("Edit","Employee",new { departmentid = Model.SelectedId}) id="Add" class="btn-link"><img src="~/Content/plus.png" style="width:1.5em;height:1.4em"></a>
-        <a href=@Url.Action("All","Home",new {model = Model }) id="Add" class="btn-link" style="margin-left:10px">Все</a>
-        <a href=@Url.Action("AllWith","Home",new {id = Model.SelectedId}) id="Add" class="btn-link" style="margin:10px">С вложенными</a>
+        @Ajax.ActionLink("Все", "All", new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "EmployeeTable" })
+        @Ajax.ActionLink("С вложенными", "AllWith", new { id = Model.SelectedId }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "EmployeeTable" })
         <table class="table-striped table-hover">
             <tr>
                 <th>ФИО</th>
@@ -58,7 +77,9 @@
                 <th>Телефон</th>
                 <th>Примечание</th>
             </tr>
-            <div id="resluts">@Html.Partial("TableEmployee", Model)
+            <tbody id="EmployeeTable">
+                @Html.Partial("TableEmployee", Model.Employees)
+            </tbody>
         </table>
     </div>
 </div>

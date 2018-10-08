@@ -115,6 +115,7 @@ namespace Dal
         public SqlCommand Insert(string Parametrs)
         {
             Cache.Remove($"All{typeof(T).Name}");
+            Cache.Remove($"All{typeof(Department).Name}ForTree");
 
             return new SqlCommand($"Insert into {typeof(T).Name} values({Parametrs})", connection);
         }
@@ -122,6 +123,7 @@ namespace Dal
         public SqlCommand Update(string Parametrs)
         {
             Cache.Remove($"All{typeof(T).Name}");
+            Cache.Remove($"All{typeof(Department).Name}ForTree");
 
             return new SqlCommand($"Update {typeof(T).Name} set {Parametrs} where {nameof(BasedObject.Id)}=@{nameof(BasedObject.Id)}", connection);
         }

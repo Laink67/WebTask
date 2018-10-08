@@ -1,6 +1,6 @@
-﻿@model TaskWeb.Models.ViewModels.IndexViewModel
+﻿@model List<Dal.DBObjects.Employee>
 
-@foreach (var item in Model.Employees)
+@foreach (var item in Model)
 {
     <tr>
         <td>
@@ -22,7 +22,7 @@
             @Html.DisplayFor(modelItem => item.Comment)
         </td>
         <td>
-            <a href=@Url.Action("Edit","Employee",new { id = item.Id,departmentid = Model.SelectedId }) id="Add"><img src="~/Content/edit.png" style="width:1.5em;height:1.4em"></a>
+            <a href=@Url.Action("Edit","Employee",new { id = item.Id,departmentid = item.DepartmentId }) id="Add"><img src="~/Content/edit.png" style="width:1.5em;height:1.4em"></a>
             <a href=@Url.Action("Delete","Employee",new { id = @item.Id}) id="Add"><img src="~/Content/delete.png" style="width:1.5em;height:1.4em"></a>
         </td>
     </tr>

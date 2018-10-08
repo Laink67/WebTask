@@ -18,9 +18,8 @@ namespace TaskWeb.Controllers
             dataManager = DataManager.Instance;
         }
 
-        public ActionResult Index(int? id,bool? with)
+        public ActionResult Index(int? id)
         {
-            IndexViewModel model;
             var depts = dataManager.Departments.GetAllForTree();
 
             for (int i = 0; i < depts.Count; i++)
@@ -38,29 +37,47 @@ namespace TaskWeb.Controllers
                 }
             }
 
-            if (!with.HasValue)
-            {
                 var allEmployees = dataManager.Employees.GetAll();
                 var employees = id.HasValue ? dataManager.Employees.GetAllForDepartment((int)id) : allEmployees;
-                model = new IndexViewModel(depts, employees, id);
-            }
-            else
-            {
-                model = new IndexViewModel(depts, id);
-            }
-
+                var model = new IndexViewModel(depts, employees, id);
             return View(model);
+
+        }
+
+        public ActionResult Find(string SearchText, List<Employee> employess)
+        {
+            var SpecialEmployee = employess.FindAll(employee => employee.FIO.Contains(SearchText));
+
+            return PartialView("TableEmployee", SpecialEmployee);
         }
 
         public ActionResult All()
         {
-            return RedirectToAction("Index", "Home");
+            var employees = DataManager.Instance.Employees.GetAll();
+
+            return PartialView("TableEmployee", employees);
         }
 
         public ActionResult AllWith(int? id)
         {
-            return RedirectToAction("Index", "Home",new { id,with = true});
+            var departments = DataManager.Instance.Departments.GetAll();
+            var employees = DataManager.Instance.Employees.GetAllForDepartment((int)id);
+
+            ForEmployeesWith(departments, employees, id);
+
+            return PartialView("TableEmployee", employees);
         }
 
+        public void ForEmployeesWith(List<Department> departments, List<Employee> employees, int? id)
+        {
+            foreach (var department in departments)
+            {
+                if (department.ParentId == id)
+                    employees.AddRange(department.Employees);
+
+                if (department.Children.Count != 0)
+                    ForEmployeesWith(department.Children, employees, id);
+            }
+        }
     }
 }
