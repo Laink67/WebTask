@@ -45,7 +45,8 @@
         {
             <li>
                 <div class="comment" data-title="@Html.DisplayFor(modelItem => departments[i].Comment)">
-                    <a href=@Url.Action("Index", "Home", new { id = departments[i].Id }) style="color:@(departments[i].Id == Model.SelectedId?"black":"blue")">@Html.DisplayFor(modelItem => departments[i].Title)</a>
+                    <p style="color:@(departments[i].Id == Model.SelectedId?"black":"blue")">@Ajax.ActionLink(departments[i].Title, "AllForDepartment",new {id = departments[i].Id}, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "EmployeeTable" })</p>
+                    @*<a href=@Url.Action("Index", "Home", new { id = departments[i].Id }) style="color:@(departments[i].Id == Model.SelectedId?"black":"blue")">@Html.DisplayFor(modelItem => departments[i].Title)</a>*@
                 </div>
                 <div style="float:left">(@departments[i].Employees.Count() ,</div><div class="info" style="color:@(Model.SelectedPensioners.Contains(departments[i].Id)?"red":"black");float:left">@departments[i].PensionersCount)</div>
                 <div>

@@ -40,6 +40,7 @@ namespace TaskWeb.Controllers
                 var allEmployees = dataManager.Employees.GetAll();
                 var employees = id.HasValue ? dataManager.Employees.GetAllForDepartment((int)id) : allEmployees;
                 var model = new IndexViewModel(depts, employees, id);
+
             return View(model);
 
         }
@@ -65,6 +66,12 @@ namespace TaskWeb.Controllers
 
             ForEmployeesWith(departments, employees, id);
 
+            return PartialView("TableEmployee", employees);
+        }
+
+        public ActionResult AllForDepartment(int id)
+        {
+            var employees = DataManager.Instance.Employees.GetAllForDepartment(id);
             return PartialView("TableEmployee", employees);
         }
 
