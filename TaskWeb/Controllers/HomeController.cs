@@ -18,8 +18,9 @@ namespace TaskWeb.Controllers
             dataManager = DataManager.Instance;
         }
 
-        public ActionResult Index(int? id)
+        public ActionResult Index(int? id, bool? with)
         {
+            IndexViewModel model;
             var depts = dataManager.Departments.GetAllForTree();
 
             for (int i = 0; i < depts.Count; i++)
@@ -37,10 +38,16 @@ namespace TaskWeb.Controllers
                 }
             }
 
+            if (!with.HasValue)
+            {
                 var allEmployees = dataManager.Employees.GetAll();
                 var employees = id.HasValue ? dataManager.Employees.GetAllForDepartment((int)id) : allEmployees;
-                var model = new IndexViewModel(depts, employees, id);
-
+                model = new IndexViewModel(depts, employees, id);
+            }
+            else
+            {
+                model = new IndexViewModel(depts, id);
+            }
             return View(model);
 
         }
@@ -61,13 +68,18 @@ namespace TaskWeb.Controllers
 
         public ActionResult AllWith(int? id)
         {
-            var departments = DataManager.Instance.Departments.GetAll();
-            var employees = DataManager.Instance.Employees.GetAllForDepartment((int)id);
-
-            ForEmployeesWith(departments, employees, id);
-
-            return PartialView("TableEmployee", employees);
+            return RedirectToAction("Index",id);
         }
+
+        //public ActionResult AllWith(int? id)
+        //{
+        //    var departments = DataManager.Instance.Departments.GetAll();
+        //    var employees = DataManager.Instance.Employees.GetAllForDepartment((int)id);
+
+        //    ForEmployeesWith(departments, employees, id);
+
+        //    return PartialView("TableEmployee", employees);
+        //}
 
         public ActionResult AllForDepartment(int id)
         {
