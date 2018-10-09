@@ -67,9 +67,8 @@
 <div>
     <div class="scrollable" style="float:right">
         <a href=@Url.Action("Edit","Employee",new { departmentid = Model.SelectedId}) id="Add" class="btn-link"><img src="~/Content/plus.png" style="width:1.5em;height:1.4em"></a>
-        @Html.ActionLink("C вложенными","AllWith",new {id =Model.SelectedId });
         @Ajax.ActionLink("Все", "All",new AjaxOptions {HttpMethod = "POST",InsertionMode = InsertionMode.Replace, UpdateTargetId = "EmployeeTable" })
-        @*@Ajax.ActionLink("С вложенными", "AllWith", new { id = Model.SelectedId }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "EmployeeTable" })*@
+        @Ajax.ActionLink("С вложенными", "AllWith", new { id = Model.SelectedId }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "EmployeeTable" })
         <table class="table-striped table-hover">
             <tr>
                 <th>ФИО</th>

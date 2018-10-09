@@ -18,9 +18,8 @@ namespace TaskWeb.Controllers
             dataManager = DataManager.Instance;
         }
 
-        public ActionResult Index(int? id, bool? with)
+        public ActionResult Index(int? id)
         {
-            IndexViewModel model;
             var depts = dataManager.Departments.GetAllForTree();
 
             for (int i = 0; i < depts.Count; i++)
@@ -38,16 +37,10 @@ namespace TaskWeb.Controllers
                 }
             }
 
-            if (!with.HasValue)
-            {
-                var allEmployees = dataManager.Employees.GetAll();
-                var employees = id.HasValue ? dataManager.Employees.GetAllForDepartment((int)id) : allEmployees;
-                model = new IndexViewModel(depts, employees, id);
-            }
-            else
-            {
-                model = new IndexViewModel(depts, id);
-            }
+            var allEmployees = dataManager.Employees.GetAll();
+            var employees = id.HasValue ? dataManager.Employees.GetAllForDepartment((int)id) : allEmployees;
+            var model = new IndexViewModel(depts, employees, id);
+
             return View(model);
 
         }
@@ -66,20 +59,20 @@ namespace TaskWeb.Controllers
             return PartialView("TableEmployee", employees);
         }
 
-        public ActionResult AllWith(int? id)
-        {
-            return RedirectToAction("Index",id);
-        }
-
         //public ActionResult AllWith(int? id)
         //{
-        //    var departments = DataManager.Instance.Departments.GetAll();
-        //    var employees = DataManager.Instance.Employees.GetAllForDepartment((int)id);
-
-        //    ForEmployeesWith(departments, employees, id);
-
-        //    return PartialView("TableEmployee", employees);
+        //    return RedirectToAction("Index",id);
         //}
+
+        public ActionResult AllWith(int? id)
+        {
+            var departments = DataManager.Instance.Departments.GetAll();
+            var employees = DataManager.Instance.Employees.GetAllForDepartment((int)id);
+
+            ForEmployeesWith(departments, employees, id);
+
+            return PartialView("TableEmployee", employees);
+        }
 
         public ActionResult AllForDepartment(int id)
         {
